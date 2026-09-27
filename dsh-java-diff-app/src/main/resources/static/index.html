@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>DSH Diff Narrator</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">DN</div>
+      <div><strong>Diff Narrator</strong><span>Powered by Harness</span></div>
+    </div>
+    <button class="primary block" id="newConversation">＋ 新对话</button>
+    <div class="section-label"><span>对话记录</span></div>
+    <div id="conversationList" class="item-list conversation-list"></div>
+  </aside>
+
+  <main class="main">
+    <header class="main-header">
+      <div>
+        <div class="title-row">
+          <span id="statusDot" class="dot"></span>
+          <h1 id="currentName">代码变更叙事器</h1>
+        </div>
+        <p id="currentDetail">解析 git diff、讲人话、揪风险 · 不改代码不执行 git 写命令</p>
+      </div>
+      <div class="header-actions">
+        <button class="ghost icon-btn" id="toggleTheme" title="切换主题">🌙</button>
+      </div>
+    </header>
+
+    <div id="workspace" class="workspace">
+      <section class="center">
+        <div id="chatMessages" class="chat-scroll"></div>
+        <div class="composer-wrap">
+          <div id="streamStatus" class="stream-status hidden">
+            <span id="streamStatusText"><span class="status-spinner"></span>AI 正在思考</span>
+          </div>
+          <div class="composer">
+            <textarea id="chatInput" rows="1" placeholder="例如：分析这个 diff 讲讲改了什么，有没有风险？"></textarea>
+            <div class="composer-bar">
+              <span class="composer-hint"><kbd>⌘</kbd>+<kbd>↵</kbd> 发送 · 不改代码不执行 git 写命令</span>
+              <div class="composer-actions">
+                <button class="ghost small hidden" id="stopStream">停止</button>
+                <button class="send-btn" id="sendMessage" title="发送">↑</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <aside class="resource-sidebar">
+        <div class="resource-scroll">
+          <div class="resource-header">
+            <b>变更分析</b>
+            <button class="ghost small" id="refreshResource">刷新</button>
+          </div>
+          <nav class="resource-tabs">
+            <button data-resource-tab="summary" class="active">摘要</button>
+            <button data-resource-tab="risk">风险</button>
+            <button data-resource-tab="gap">测试缺口</button>
+            <button data-resource-tab="rollback">回滚</button>
+          </nav>
+          <section class="panel" data-tab="summary">
+            <div class="panel-title"><span>变更摘要</span></div>
+            <div class="panel-body" style="padding:8px">
+              <textarea id="diffInput" rows="10" style="width:100%;font:12px monospace;padding:8px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text)" placeholder="diff --git a/src/Main.java b/src/Main.java&#10;index 111..222 100644&#10;--- a/src/Main.java&#10;+++ b/src/Main.java&#10;@@ -1,3 +1,4 @@&#10;-old line&#10;+new line"></textarea>
+              <button class="ghost small" id="analyzeBtn" style="margin-top:6px">解析并分析</button>
+              <div id="summaryResult" class="muted" style="margin-top:8px">文件数 / 增删行 / 目录聚合</div>
+            </div>
+          </section>
+          <section class="panel hidden" data-tab="risk">
+            <div class="panel-title"><span>风险扫描</span></div>
+            <div id="riskResult" class="panel-body muted">先在"摘要"页解析 diff</div>
+          </section>
+          <section class="panel hidden" data-tab="gap">
+            <div class="panel-title"><span>测试缺口</span></div>
+            <div id="gapResult" class="panel-body muted">先在"摘要"页解析 diff</div>
+          </section>
+          <section class="panel hidden" data-tab="rollback">
+            <div class="panel-title"><span>回滚计划</span></div>
+            <div id="rollbackResult" class="panel-body muted">先在"摘要"页解析 diff</div>
+          </section>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
